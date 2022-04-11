@@ -1,8 +1,8 @@
 
-import { Breadcrumb,Layout} from 'antd'
+import { Breadcrumb,Layout, Pagination} from 'antd'
 import Search from 'antd/lib/input/Search'
-import React from 'react'
-import { Link, NavLink } from 'react-router-dom'
+import React, { useState } from 'react'
+import { Link, NavLink, useNavigate } from 'react-router-dom'
 import CarouselLayout from '../../Components/CarouselLayout'
 import ProductContent from '../../Components/ProductContent'
 import ProductSider from '../../Components/ProductSider'
@@ -11,9 +11,21 @@ import { ProductType } from '../../types/product'
 type ProductsProps = {
   products: ProductType[],
   onSearchProduct(keyword:any) : () => void
+  onPage:() => (page: number) => void
 }
 
-const Products = (props: ProductsProps) => {  
+const Products = (props: ProductsProps) => {
+  const navigate = useNavigate()
+  const [page,setPage] = useState<any>({
+    current : 1
+  })
+  const onChange = (page: number) => {
+    console.log(page);
+    setPage({
+      current: page,
+    });
+    navigate(`/products/page?=${page}`)
+  };  
   const onSearch = (value:any) =>{
     props.onSearchProduct(value);
   }
@@ -28,6 +40,7 @@ const Products = (props: ProductsProps) => {
     <ProductSider/> 
     <ProductContent products={props.products}/>
   </Layout>
+  <Pagination style={{margin:"0 auto"}} onChange={onChange} defaultCurrent={page} total={50} />
     </>    
   )
 }

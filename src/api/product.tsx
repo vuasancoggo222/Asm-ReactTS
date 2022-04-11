@@ -33,3 +33,7 @@ export const read = ( id : number ) => {
     const url =`products/search?q=${keyword}`
     return instance.get(url)
   }
+  export const getbyPage = (page: number) => {
+    const url = `products/page?={page}`;
+    return instance.get(url);
+  };

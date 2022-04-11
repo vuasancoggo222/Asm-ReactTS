@@ -6,7 +6,7 @@ import { useEffect } from "react";
 import { Routes, Route, NavLink, Navigate, useNavigate } from "react-router-dom";
 import { ProductType } from "./types/product";
 import { CategoryType } from "./types/category";
-import { getLatest, productList, removeProduct, searchProduct, updateProduct } from "./api/product";
+import { getbyPage, getLatest, productList, removeProduct, searchProduct, updateProduct } from "./api/product";
 import { message, Modal, notification } from "antd";
 import { UserType } from "./types/user";
 import { signin, signup } from "./api/auth";
@@ -31,6 +31,9 @@ import ContactManager from "./admin/Contact/ContactManager";
 import UserManager from "./admin/User/UserManager";
 import axios from "axios";
 import { isAuthenticate } from "./utils/localStorage";
+import ProductSearch from "./Pages/website/ProductSearch";
+import EmptyPage from "./Pages/website/EmptyPage";
+import ProductPaginatePage from "./Pages/website/ProductPaginatePage";
 const {user} = isAuthenticate()
 const App = () => {
   const navigate = useNavigate()
@@ -38,6 +41,7 @@ const App = () => {
   const [products, setProducts] = useState<ProductType[]>([]); 
   const [category, setCategory] = useState<CategoryType[]>([]);
   const [latestProduct, setLatestProduct] = useState<ProductType[]>([]);
+  const [searchProducts,setSearchProducts] = useState<ProductType[]>([]);
   useEffect(() => {
     const getProducts = async () => {
       const { data } = await productList();
@@ -162,7 +166,7 @@ useEffect(() => {
   const getLatestProducts = async () => {
     const limit = 4
     const {data} = await getLatest(limit)
-    setLatestProduct(data)  
+    setLatestProduct(data)
   }
   getLatestProducts()
 },[])
@@ -170,26 +174,45 @@ useEffect(() => {
 const onHandleSearch = async(keyword: string)=>{
   try {
     const {data} = await searchProduct(keyword)
-    setProducts(data)
+    setSearchProducts(data) 
     notification.success({
-      message: "Không thể tìm kiếm",
+      message: "Tìm kiếm thành công !!",
       description: `Sản phẩm cho từ khoá : ${keyword}`
     })
+    navigate(`/products/search?q=${keyword}`) 
   } catch (error:any) {
     notification.error({
       message: "Không thể tìm kiếm",
       description: `${error.response.data.message}`
     })
-    setProducts([])
+    navigate(`/products/empty?q=${keyword}`)
   }
   
 }
+// Paginate
+
+// useEffect(() => {
+//   const Pagination = async()=>{
+  
+//     try {
+//       const {data} = await getbyPage()
+//       console.log(data);
+      
+//     } catch (error) {
+//       console.log(error);
+      
+//     }
+//   }
+//   }
   return (
     <div className="App ">
       <Routes>
         <Route element={<WebsiteLayout/>}>
         <Route path="/" element={<Home products={products} category={category} latestProduct={latestProduct} />} />
-        <Route path="products" element={<Products onSearchProduct={onHandleSearch} products={products} />} />
+        <Route path="products" element={<Products products={products} onSearchProduct={onHandleSearch}/>}/>
+        <Route path="products/search" element={<ProductSearch data={searchProducts} />} />
+        <Route path="products/empty" element={<EmptyPage/>}/>
+        <Route path="products/page" element={<ProductPaginatePage/>}/>
         <Route path="product-detail/:id" element={<ProductDetail/>} />
         <Route path="sign-in" element={<SignIn onSignin={handleSignIn} />} />
         <Route path="sign-up" element={<SignUp onSignup={handleSignUp} />} />
@@ -211,6 +234,7 @@ const onHandleSearch = async(keyword: string)=>{
         </Route>
       </Routes>
     </div>
-  );
-};
-export default App;
+  )
+}
+
+export default App
