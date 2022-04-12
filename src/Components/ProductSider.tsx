@@ -2,29 +2,47 @@ import React from 'react'
 import Sider from 'antd/lib/layout/Sider'
 import SubMenu from 'antd/lib/menu/SubMenu'
 import { LaptopOutlined, NotificationOutlined, UserOutlined } from '@ant-design/icons'
-import { Menu } from 'antd'
-type Props = {}
+import { Button, Form, InputNumber, Menu } from 'antd'
+import { CategoryType } from '../types/category'
+import { Link, useNavigate } from 'react-router-dom'
+type Props = {
+  category : CategoryType[]
+}
 
 const ProductSider = (props: Props) => {
+  const navigate = useNavigate()
+  const onFinish = (values: any) => {
+    console.log('Success:', values);
+    navigate(`/products/filter?gte=${values.gte}&lte=${values.lte}`)
+  };
+  
   return (
 <Sider width={220} className="site-layout-background">
         <Menu
           mode="inline"
           defaultSelectedKeys={['1']}
-          defaultOpenKeys={['sub1']}
           style={{ height: '100%', borderRight: 0 }}
         >
-          <SubMenu key="sub1" icon={<UserOutlined />} title="subnav 1">
-            <Menu.Item key="1">option1</Menu.Item>
-            <Menu.Item key="2">option2</Menu.Item>
-            <Menu.Item key="3">option3</Menu.Item>
-            <Menu.Item key="4">option4</Menu.Item>
+          <SubMenu key="sub1" icon={<UserOutlined />} title="Danh mục">
+            {props.category && props.category.map((item, index)=>{
+              return <Link to={`/category/${item._id}`}><Menu.Item key={item._id+index}>{item.name}</Menu.Item></Link>
+            })}
+            
+           
           </SubMenu>
-          <SubMenu key="sub2" icon={<LaptopOutlined />} title="subnav 2">
-            <Menu.Item key="5">option5</Menu.Item>
-            <Menu.Item key="6">option6</Menu.Item>
-            <Menu.Item key="7">option7</Menu.Item>
-            <Menu.Item key="8">option8</Menu.Item>
+          <SubMenu key="sub2" icon={<LaptopOutlined />} title="Khoảng giá">
+         <Form  onFinish={onFinish} style={{marginLeft:"30px"}}>
+         <Form.Item label="Tối thiểu" name="gte"
+        rules={[{ required: true, message: 'Vui lòng điền giá trị tối thiểu!' }]}>
+        <InputNumber />
+      </Form.Item>
+      <Form.Item label="Tối đa" name="lte"
+        rules={[{ required: true, message: 'Vui lòng điền giá trị tối ta!' }]}>
+        <InputNumber style={{marginLeft:"15px"}} />
+      </Form.Item>
+       <Button type="primary" htmlType="submit">Apply</Button>
+         </Form>
+          
           </SubMenu>
           <SubMenu key="sub3" icon={<NotificationOutlined />} title="subnav 3">
             <Menu.Item key="9">option9</Menu.Item>

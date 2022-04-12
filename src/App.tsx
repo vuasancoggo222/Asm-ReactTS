@@ -1,12 +1,12 @@
-import { useState } from "react";
+import { useMemo, useState } from "react";
 import "./index.css";
 import "./App.css"
 import 'antd/dist/antd.css';
 import { useEffect } from "react";
-import { Routes, Route, NavLink, Navigate, useNavigate } from "react-router-dom";
+import { Routes, Route, NavLink, Navigate, useNavigate, useLocation } from "react-router-dom";
 import { ProductType } from "./types/product";
 import { CategoryType } from "./types/category";
-import { getbyPage, getLatest, productList, removeProduct, searchProduct, updateProduct } from "./api/product";
+import { getbyPage, getLatest, productList, removeProduct, searchProduct } from "./api/product";
 import { message, Modal, notification } from "antd";
 import { UserType } from "./types/user";
 import { signin, signup } from "./api/auth";
@@ -34,11 +34,22 @@ import { isAuthenticate } from "./utils/localStorage";
 import ProductSearch from "./Pages/website/ProductSearch";
 import EmptyPage from "./Pages/website/EmptyPage";
 import ProductPaginatePage from "./Pages/website/ProductPaginatePage";
+import Category from "./Pages/website/Category";
+import ProductFilter from "./Pages/website/ProductFilter";
 const {user} = isAuthenticate()
+function useQuery() {
+  const { search } = useLocation();
+  return useMemo(() => new URLSearchParams(search), [search]);
+}
 const App = () => {
   const navigate = useNavigate()
+  const query = useQuery();
+  const pageId = query.get('page')
+
+  
   //Products
-  const [products, setProducts] = useState<ProductType[]>([]); 
+  const [products, setProducts] = useState<ProductType[]>([]);
+  const[productPage,setProductPage] = useState<ProductType[]>([]);
   const [category, setCategory] = useState<CategoryType[]>([]);
   const [latestProduct, setLatestProduct] = useState<ProductType[]>([]);
   const [searchProducts,setSearchProducts] = useState<ProductType[]>([]);
@@ -50,6 +61,16 @@ const App = () => {
     getProducts();
   }, []);
 
+  useEffect(() => {
+    const getPage = async () => {
+      const page = pageId
+      const { data } = await getbyPage(page);
+      console.log(data);
+      setProductPage(data)
+    };
+   getPage();
+  },[pageId]);
+  // Remove
   const handleRemove = async (id :number)=>{
   try {
     Modal.confirm({
@@ -65,6 +86,7 @@ const App = () => {
     message.error(`${error.response.data.message}`,2);
   }
   }
+  // Product Add
   const handleAdd = async (product: ProductType) =>{
 try {
   const formData = new FormData();
@@ -88,6 +110,8 @@ try {
   console.log("Khong thanh cong");
 }
   }
+
+  // Product Update
   const handleUpdate = async (product: ProductType) =>{
     try {
       const formUpdate = new FormData();
@@ -152,7 +176,7 @@ const handleSignUp = async (user : UserType) => {
     
   }
 }
-
+// Get Categorylist
 useEffect(() => {
   const getCategory = async () => {
     const {data} = await Categorylist()
@@ -189,31 +213,18 @@ const onHandleSearch = async(keyword: string)=>{
   }
   
 }
-// Paginate
 
-// useEffect(() => {
-//   const Pagination = async()=>{
-  
-//     try {
-//       const {data} = await getbyPage()
-//       console.log(data);
-      
-//     } catch (error) {
-//       console.log(error);
-      
-//     }
-//   }
-//   }
   return (
     <div className="App ">
       <Routes>
         <Route element={<WebsiteLayout/>}>
         <Route path="/" element={<Home products={products} category={category} latestProduct={latestProduct} />} />
-        <Route path="products" element={<Products products={products} onSearchProduct={onHandleSearch}/>}/>
+        <Route path="products" element={<Products category={category}  products={productPage} data={products} onSearchProduct={onHandleSearch}/>}/>
         <Route path="products/search" element={<ProductSearch data={searchProducts} />} />
+        <Route path="products/filter" element={<ProductFilter category={category}  />} />
         <Route path="products/empty" element={<EmptyPage/>}/>
-        <Route path="products/page" element={<ProductPaginatePage/>}/>
         <Route path="product-detail/:id" element={<ProductDetail/>} />
+        <Route path="category/:id/" element={<Category category={category}/>}/>
         <Route path="sign-in" element={<SignIn onSignin={handleSignIn} />} />
         <Route path="sign-up" element={<SignUp onSignup={handleSignUp} />} />
         </Route>

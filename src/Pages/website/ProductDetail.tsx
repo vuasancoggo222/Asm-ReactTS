@@ -9,7 +9,7 @@ type Props = {};
 
 const ProductDetail = (props: Props) => {
   const { id } = useParams();
-  const [products, setProducts] = useState<ProductType[]>([]);
+  const [products, setProducts] = useState<any>([]);
   useEffect(() => {
     const getDetailProduct = async (id: any) => {
       const { data } = await read(id);

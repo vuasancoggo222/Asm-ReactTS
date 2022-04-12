@@ -1,20 +1,22 @@
-import { Col, Image, Row } from "antd";
-import { Content } from "antd/lib/layout/layout";
-import React from "react";
-import { Link } from "react-router-dom";
-import { ProductType } from "../types/product";
+import { Col, Image, Row } from 'antd';
+import { Content } from 'antd/lib/layout/layout';
+import React from 'react'
+import { Link } from 'react-router-dom';
+import { ProductType } from '../types/product';
 
-type ProductContentProps = {
-  products: ProductType[];
-};
+type Props = {
+    data: any
+}
 
-const ProductContent = (props: ProductContentProps) => {
+const CategoryContent = (props: Props) => {
+    console.log(props.data.product);
+    
   return (
     <Content style={{ marginLeft: "40px", marginTop: "25px" }}>
       <div>
         <Row gutter={[24, 24]}>
-          {props.products &&
-            props.products.map((item, index) => {
+          {props.data.product &&
+            props.data.product.map((item:any, index:number) => {
               return (
                 <Col key={index} span={6}>
                   <div
@@ -44,7 +46,7 @@ const ProductContent = (props: ProductContentProps) => {
         </Row>
       </div>
     </Content>
-  );
-};
+  )
+}
 
-export default ProductContent;
+export default CategoryContent

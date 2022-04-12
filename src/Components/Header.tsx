@@ -13,7 +13,7 @@ const HeaderLayout = (props: Props) => {
      </div>
        <Menu theme="light" mode="horizontal" defaultSelectedKeys={['home']}>
          <MenuItem style={{ marginLeft: "160px" }} key="home"><NavLink to="/">Home</NavLink></MenuItem>
-         <MenuItem key="product"><NavLink to="products">Products</NavLink></MenuItem>
+         <MenuItem key="product"><NavLink to="products?page=1">Products</NavLink></MenuItem>
          <MenuItem key="news"><NavLink to="news">News</NavLink></MenuItem>
          <MenuItem key="contact"><NavLink to="contact">Contact</NavLink></MenuItem>
          <MenuItem key="about"><NavLink to="about">About</NavLink></MenuItem>

@@ -11,12 +11,6 @@ export const productList = () => {
   const url = `products`;
   return instance.get(url);
 };
-export const createProduct = (product: ProductType)=>{
-  
-}
-export const updateProduct = (product: ProductType) => {
-
-};
 export const read = ( id : number ) => {
     const url = `product/${id}`;
     return instance.get(url);
@@ -34,6 +28,10 @@ export const read = ( id : number ) => {
     return instance.get(url)
   }
   export const getbyPage = (page: number) => {
-    const url = `products/page?={page}`;
+    const url = `products?page=${page}&limit=8`;
     return instance.get(url);
   };
+  export const priceRange = (lte : number,gte: number)=>{
+    const url = `products/filter?gte=${gte}&lte=${lte}`;
+    return instance.get(url)
+  }
