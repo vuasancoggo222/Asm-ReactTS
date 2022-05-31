@@ -24,8 +24,8 @@ const ProductContent = (props: ProductContentProps) => {
                       height: "350px",
                     }}
                   >
-                    <Image
-                      src={`http://localhost:8001/uploads/${item.image}`}
+                    <img
+                      src={`https://picsum.photos/240/300`}
                       width={240}
                     />
 

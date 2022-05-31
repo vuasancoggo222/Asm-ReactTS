@@ -52,7 +52,7 @@ const ProductManager = (props: ProductManagerProps) => {
     {
       title: "Thumbnail",
       key: "thumbnail",
-      render :(record:any) => <img src={`http://localhost:8001/uploads/${record.image}`} style={{ width: "80px"}} alt="" />
+      render :(record:any) => <img src={`https://picsum.photos/240/300`} style={{ width: "80px"}} alt="" />
     },
     {
       title: "Description",
@@ -66,6 +66,15 @@ const ProductManager = (props: ProductManagerProps) => {
       title: "Status",
       key: "status",
       dataIndex: "status",
+     
+      render: (record: any) =>{
+        if(record == true){
+          return <p>Còn hàng</p>
+        }
+        else{
+          return <p>Hết hàng</p>
+        }
+      }
     },
     {
       title: "Action",

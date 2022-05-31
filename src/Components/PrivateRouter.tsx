@@ -1,5 +1,5 @@
 import React from 'react'
-import { Navigate } from 'react-router-dom'
+import { Navigate, useNavigate } from 'react-router-dom'
 import { isAuthenticate } from '../utils/localStorage'
 
 type PrivateRouterProps = {
@@ -7,14 +7,17 @@ type PrivateRouterProps = {
 }
 
 const PrivateRouter = (props: PrivateRouterProps) => {
-     const user = isAuthenticate()
-    
-    if(!user?.user.role) {
-         return <Navigate to="/"/>
+  const navigate = useNavigate()
+if(localStorage.getItem('user')){
+    const {user} = JSON.parse(localStorage.getItem('user') as string)
+    if(user.role !==1){
+       return navigate('/signin')
     }
-  return (
-    props.children
-  )
+    return props.children
+}
+else{
+  navigate('/signin')
+}
 }
 
 export default PrivateRouter

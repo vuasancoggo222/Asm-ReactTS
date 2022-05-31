@@ -25,7 +25,7 @@ const ProductSider = (props: Props) => {
         >
           <SubMenu key="sub1" icon={<UserOutlined />} title="Danh mục">
             {props.category && props.category.map((item, index)=>{
-              return <Link to={`/category/${item._id}`}><Menu.Item key={item._id+index}>{item.name}</Menu.Item></Link>
+              return <Link to={`/category/${item._id}`}><Menu.Item key={item._id}>{item.name}</Menu.Item></Link>
             })}
             
            

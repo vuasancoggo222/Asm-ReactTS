@@ -19,7 +19,6 @@ const Home = (props: Props) => {
   <>
   <CarouselLayout/>
     <Layout>
-    <SiderLayout category={props.category}/>
     <ContentLayout latestProduct={props.latestProduct}/> 
     </Layout>
   </>

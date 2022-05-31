@@ -7,8 +7,6 @@ latestProduct : ProductType[]
 }
 
 const ContentLayout = (props: Props) => {
-  console.log(props.latestProduct);
-  
   const style = {padding: '8px 0' };
   return (
    <Content>
@@ -19,7 +17,7 @@ const ContentLayout = (props: Props) => {
     {props.latestProduct && props.latestProduct.map((item,index) => {
       return <Col span={6} key={index}>
       <div style={style}>
-        <img src={`http://localhost:8001/uploads/${item.image}`} width="240px" alt="" />
+        <img src={`https://picsum.photos/240/300`} width="240px" alt="" />
        <div style={{textAlign: 'center'}}>
        <span>{item.name}</span> <br />
         <span>{item.price}</span>

@@ -1,12 +1,20 @@
 import instance from "./instance";
 import type { ProductType } from "../types/product";
-import { isAuthenticate } from "../utils/localStorage";
-const {user} = isAuthenticate()
- const header = {
+export let user:any = ""
+if(localStorage.getItem('user')){
+   user = JSON.parse(localStorage.getItem('user') as string)
+}
+console.log(user);
+
+
+
+export const header = {
     headers: {
         "Authorization": `Bearer ${user.token}`
     }
   }
+  console.log(header);
+  
 export const productList = () => {
   const url = `products`;
   return instance.get(url);
@@ -15,8 +23,16 @@ export const read = ( id : number ) => {
     const url = `product/${id}`;
     return instance.get(url);
   };
+  export const createProduct = () => {
+    const url = `products/${user.user._id}`;
+    return instance.post(url,header);
+  };
+  export const updateProduct = (id : number) => {
+    const url = `product/${id}/${user.user_id}`;
+    return instance.put(url,header);
+  };
   export const removeProduct = ( id : number ) => {
-    const url = `product/${id}/${user._id}`;
+    const url = `product/${id}/${user.user._id}`;
     return instance.delete(url,header);
   };
   export const getLatest = (limit : number) =>{

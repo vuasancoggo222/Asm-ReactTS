@@ -12,19 +12,49 @@ type ProductAddProps = {
 };
 
 const ProductAdd = (props: ProductAddProps) => {
+const navigate = useNavigate();
 const [category, setCategory] = useState([])
-const [fileList, setFileList] = useState([]);
-console.log(fileList);
-const onChange = ({ fileList: newFileList }:any) => {
-  setFileList(newFileList);
-};  
+const [url,setUrl] = useState([])
+const [defaultFileList, setDefaultFileList] = useState([]);
+const uploadImage = async (options:any) => {
+  const { onSuccess, onError, file } = options;
+  const formData = new FormData();
 
-    const navigate = useNavigate();
+  formData.append("file", file);
+  formData.append("upload_preset", "ypnhyinn");
+  try {
+    const res = await axios({
+      url: "https://api.cloudinary.com/v1_1/ecma/image/upload",
+      method: "POST",
+      headers: {
+          "Content-Type": "application/x-www-formendcoded",
+      },
+      data: formData,
+    }
+
+    );
+    onSuccess('Ok');
+    notification.success({
+     "message" : "Upload successfully !",
+     "description": "Image uploaded successfully to Cloudinary !!"
+    })
+    console.log("server res: ", res);
+    setUrl([...url,{imgname: res.data.original_filename,url : res.data.secure_url} ])
+  } catch (err) {
+    console.log("Error: ", err);
+    const error = new Error("Some error");
+    onError({ err });
+  }
+};
+const handleOnChange = ({ file, fileList, event }:any) => {
+  setDefaultFileList(fileList);
+};
   const onFinish = (values: ProductType) => {
-    const newValues = {...values, image : fileList[0]}
+    console.log(values);
+    
+    const newValues = {...values,image : url}
     console.log("Success:",newValues);
     props.onAdd(newValues);
-    navigate("/admin/product");
   };
 
   const onFinishFailed = (errorInfo: any) => {
@@ -41,7 +71,6 @@ const onChange = ({ fileList: newFileList }:any) => {
   
   return (
     <Form
-    encType="multipart/form-data"
       labelCol={{ span: 6 }}
       wrapperCol={{ span: 8 }}
       autoComplete="off"
@@ -70,11 +99,13 @@ const onChange = ({ fileList: newFileList }:any) => {
 <ImgCrop>
 <Upload
         listType="picture-card"
-        fileList={fileList}
-        onChange={onChange}
+        onChange={handleOnChange}
         name = "image"
+        accept="image/*"
+        customRequest={uploadImage}
+        defaultFileList={defaultFileList}
       >
-        {fileList.length < 1 && '+ Upload'}
+        {defaultFileList.length < 1 && '+ Upload'}
       </Upload>
 </ImgCrop>
       </Form.Item>

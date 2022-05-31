@@ -6,7 +6,7 @@ import { useEffect } from "react";
 import { Routes, Route, NavLink, Navigate, useNavigate, useLocation } from "react-router-dom";
 import { ProductType } from "./types/product";
 import { CategoryType } from "./types/category";
-import { getbyPage, getLatest, productList, removeProduct, searchProduct } from "./api/product";
+import { createProduct, getbyPage, getLatest, productList, removeProduct, searchProduct, updateProduct } from "./api/product";
 import { message, Modal, notification } from "antd";
 import { UserType } from "./types/user";
 import { signin, signup } from "./api/auth";
@@ -35,7 +35,8 @@ import ProductSearch from "./Pages/website/ProductSearch";
 import EmptyPage from "./Pages/website/EmptyPage";
 import Category from "./Pages/website/Category";
 import ProductFilter from "./Pages/website/ProductFilter";
-const {user} = isAuthenticate()
+import {user} from './api/product'
+import UserInformation from "./Pages/users/UserInformation";
 function useQuery() {
   const { search } = useLocation();
   return useMemo(() => new URLSearchParams(search), [search]);
@@ -62,7 +63,7 @@ const App = () => {
 
   useEffect(() => {
     const getPage = async () => {
-      const page = pageId
+      const page:any = pageId
       const { data } = await getbyPage(page);
       console.log(data);
       setProductPage(data)
@@ -88,23 +89,10 @@ const App = () => {
   // Product Add
   const handleAdd = async (product: ProductType) =>{
 try {
-  const formData = new FormData();
-  formData.append("image",product.image.originFileObj)
-  formData.append("name",product.name)
-  formData.append("price",product.price)
-  formData.append("description",product.description)
-  formData.append("status",product.status)
-  formData.append("category",product.category)
-  const {data} = await axios({
-    url : `http://localhost:8001/api/products/${user._id}`,
-    method: "POST",
-    headers: {
-        "Content-Type": "multipart/form-data",
-        "Authorization": `Bearer ${user.token}`
-    },
-    data: formData
-  })
+  const {data} = await createProduct()
+  console.log(data);
   setProducts([...products,data])
+  navigate("/admin/product");
 } catch (error) {
   console.log("Khong thanh cong");
 }
@@ -113,23 +101,7 @@ try {
   // Product Update
   const handleUpdate = async (product: ProductType) =>{
     try {
-      const formUpdate = new FormData();
-      formUpdate.append("image",product.image.originFileObj)
-      formUpdate.append("name",product.name)
-      formUpdate.append("price",product.price)
-      formUpdate.append("description",product.description)
-      formUpdate.append("status",product.status)
-      formUpdate.append("category",product.category) 
-      const {data} = await axios({
-        url : `http://localhost:8001/api/product/${product._id}/${user._id}`,
-        method: "PUT",
-        headers: {
-            "Content-Type": "multipart/form-data",
-            "Authorization": `Bearer ${user.token}`
-        },
-        data: formUpdate
-      })
-      
+      const {data} = await updateProduct(product)
       setProducts(products.map(item => item._id == data._id ? data : item));
         message.success('Update product successfully',2);
     // navigate("/admin/product")
@@ -212,11 +184,17 @@ const onHandleSearch = async(keyword: string)=>{
   }
   
 }
-
+const handleLogout = () =>{
+  if(localStorage.getItem('user')){
+    localStorage.removeItem('user')
+    navigate('/')
+    message.success('Đăng xuất thành công !')
+  }
+}
   return (
     <div className="App ">
       <Routes>
-        <Route element={<WebsiteLayout/>}>
+        <Route element={<WebsiteLayout logOut={handleLogout} />}>
         <Route path="/" element={<Home products={products} category={category} latestProduct={latestProduct} />} />
         <Route path="products" element={<Products category={category}  products={productPage} data={products} onSearchProduct={onHandleSearch}/>}/>
         <Route path="products/search" element={<ProductSearch data={searchProducts} />} />
@@ -226,6 +204,7 @@ const onHandleSearch = async(keyword: string)=>{
         <Route path="category/:id/" element={<Category category={category}/>}/>
         <Route path="sign-in" element={<SignIn onSignin={handleSignIn} />} />
         <Route path="sign-up" element={<SignUp onSignup={handleSignUp} />} />
+        <Route path="user-information" element={<UserInformation/>}/>
         </Route>
         <Route path="admin" element={<PrivateRouter><AdminLayout/></PrivateRouter>}>
           <Route index element={<Navigate to="dashboard" />} />

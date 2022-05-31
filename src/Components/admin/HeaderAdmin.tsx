@@ -1,15 +1,14 @@
 import React from 'react'
 import { Avatar, Button, Dropdown, Image, Menu } from 'antd';
 import { CaretDownOutlined } from '@ant-design/icons';
+import { Link } from 'react-router-dom';
 type HeaderAdminProps = {}
 
 const HeaderAdmin = (props: HeaderAdminProps) => {
     const menu = (
         <Menu>
           <Menu.Item key="userinfo">
-            <a target="_blank" rel="noopener noreferrer" href="https://www.antgroup.com">
-              Account Information
-            </a>
+            <Link to="/">Go to the home page</Link>
           </Menu.Item>
           <Menu.Item key="logout">
             <a target="_blank" rel="noopener noreferrer" href="https://www.aliyun.com">

@@ -2,9 +2,21 @@ import React from 'react'
 import {Link,NavLink} from "react-router-dom"
 import {Menu, Layout } from "antd"
 import MenuItem from 'antd/lib/menu/MenuItem'
+import {user} from '../api/product'
+import { Button } from 'antd/lib/radio'
 const { Header } = Layout
-type Props = {}
+type Props = {
+  onLogout : () => void
+}
 const HeaderLayout = (props: Props) => {
+  let name = ""
+if(user){
+  name = user.user.name  
+}
+else{
+  name = "User"
+}
+console.log(name);
   return (
    <div className="container-fluid">
      <Header style={{background: 'white'}} className="header">
@@ -17,8 +29,8 @@ const HeaderLayout = (props: Props) => {
          <MenuItem key="news"><NavLink to="news">News</NavLink></MenuItem>
          <MenuItem key="contact"><NavLink to="contact">Contact</NavLink></MenuItem>
          <MenuItem key="about"><NavLink to="about">About</NavLink></MenuItem>
-         {(localStorage.getItem('user')) ? <><MenuItem style={{ marginLeft: "620px" }} key=""><NavLink to="sign-in">User</NavLink></MenuItem>
-         <MenuItem key="logout"><NavLink to="sign-up">Log Out</NavLink></MenuItem></>   : <><MenuItem style={{ marginLeft: "620px" }} key="signin"><NavLink to="sign-in">Sign In</NavLink></MenuItem>
+         {(localStorage.getItem('user')) ? <><MenuItem style={{ marginLeft: "620px" }} key=""><NavLink to="user-information">{name}</NavLink></MenuItem>
+         <MenuItem key="logout"><Button onClick={()=> props.onLogout()}>Logout</Button></MenuItem></>   : <><MenuItem style={{ marginLeft: "620px" }} key="signin"><NavLink to="sign-in">Sign In</NavLink></MenuItem>
          <MenuItem key="signup"><NavLink to="sign-up">Sign Up</NavLink></MenuItem></>}
          
        </Menu>

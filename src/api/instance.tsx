@@ -1,6 +1,6 @@
 import axios from 'axios';
 const instance = axios.create({
-    baseURL : 'http://localhost:8001/api'
+    baseURL : 'https://asm-node-js-rosy.vercel.app/api'
 })
 export default instance
 

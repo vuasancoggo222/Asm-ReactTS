@@ -6,13 +6,13 @@ import FooterLayout from '../../Components/Footer';
 import { ProductType } from '../../types/product';
 import { CategoryType } from '../../types/category';
 type WebsiteLayoutProps = {
- 
+ logOut : () => void
 }
 
 const WebsiteLayout = (props: WebsiteLayoutProps) => {
   return (
     <Layout className="layout" style={{margin:"0 15px"}}>
-      <HeaderLayout/>
+      <HeaderLayout onLogout={()=> props.logOut()}/>
       <Outlet/>
       <FooterLayout/>
     </Layout>
