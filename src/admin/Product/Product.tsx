@@ -105,7 +105,7 @@ const ProductManager = (props: ProductManagerProps) => {
       status: item.status,
       description: item.description,
       image: item.image,
-      category: item.category.name,
+      category: item.category?.name,
     };
   });
   return (

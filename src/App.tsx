@@ -99,7 +99,7 @@ try {
   }
 
   // Product Update
-  const handleUpdate = async (product: ProductType) =>{
+  const handleUpdate = async (product:any) =>{
     try {
       const {data} = await updateProduct(product)
       setProducts(products.map(item => item._id == data._id ? data : item));

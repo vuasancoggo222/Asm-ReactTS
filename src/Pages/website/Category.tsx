@@ -14,7 +14,7 @@ type Props = {
 
 const Category = (props: Props) => {
     const [products,setProducts] = useState<any>([])
-    const {id} = useParams()
+    const {id}:any = useParams()
     useEffect(() => {
         const getProductByCategory = async ()=>{
             const {data} = await categoryRead(id)

@@ -22,7 +22,7 @@ const EmptyPage = (props: EmptyPageProps) => {
   </Breadcrumb>
     <h1 style={{ marginLeft:"250px",paddingTop:"25px"}}>Không tìm thấy sản phẩm với từ khoá :"{ keyword}" </h1>
   <Layout style={{ flexDirection:"row"}}>
-    <ProductSider/> 
+    <ProductSider category={[]}/> 
     <Empty style={{marginLeft:"500px" }}/>
   </Layout>
     </>

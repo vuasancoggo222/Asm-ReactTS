@@ -6,7 +6,12 @@ type PrivateRouterProps = {
     children: JSX.Element
 }
 
-const PrivateRouter = (props: PrivateRouterProps) => {
+
+
+
+
+
+export const PrivateRouter = (props: PrivateRouterProps) => {
   const navigate = useNavigate()
 if(localStorage.getItem('user')){
     const {user} = JSON.parse(localStorage.getItem('user') as string)
@@ -19,5 +24,3 @@ else{
   navigate('/signin')
 }
 }
-
-export default PrivateRouter
