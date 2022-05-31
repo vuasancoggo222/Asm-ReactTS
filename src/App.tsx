@@ -33,7 +33,6 @@ import axios from "axios";
 import { isAuthenticate } from "./utils/localStorage";
 import ProductSearch from "./Pages/website/ProductSearch";
 import EmptyPage from "./Pages/website/EmptyPage";
-import ProductPaginatePage from "./Pages/website/ProductPaginatePage";
 import Category from "./Pages/website/Category";
 import ProductFilter from "./Pages/website/ProductFilter";
 const {user} = isAuthenticate()
